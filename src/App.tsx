@@ -222,7 +222,7 @@ function App() {
                 onClick={() => scrollToForm()}
                 data-testid="button-free-consultation"
               >
-                Agendar Asesoría Gratis 15 min{' '}
+                Agendá tu reunión informativa gratis{' '}
                 <span className="text-button-arrow">↗</span>
               </button>
             </div>
