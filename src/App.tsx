@@ -439,7 +439,7 @@ function App() {
               <div className="video-frame">
                 <iframe
                   title="Por qué creé Chispa Digital y cómo puedo ayudarte a transformar tu agencia"
-                  src="https://www.youtube.com/embed/VIDEO_ID_AQUI?autoplay=1"
+                  src="https://www.youtube.com/watch?v=cRtLxh1Gfc4"
                   allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
