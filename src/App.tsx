@@ -33,7 +33,7 @@ const plans = [
     name: 'Bronce' as const,
     product: 'Chispa Academy',
     subtitle: 'Para agentes que buscan bases sólidas y autonomía.',
-    price: '$300 USD',
+    price: '$299 USD',
     priceNote: 'o su equivalente en ARS',
     features: [
       'Módulos on-demand para agentes de viajes.',
@@ -49,7 +49,7 @@ const plans = [
     name: 'Oro' as const,
     product: 'Chispa Pro',
     subtitle: 'Nuestra experiencia grupal insignia para acelerar resultados.',
-    price: '$600 USD',
+    price: '$599 USD',
     priceNote: 'opción de pago en cuotas disponible',
     features: [
       'Todo lo incluido en Bronce.',
@@ -67,7 +67,7 @@ const plans = [
     name: 'Diamante' as const,
     product: 'VIP Mentorship',
     subtitle: 'Acompañamiento 1 a 1 de alto impacto para agencias de alto rendimiento.',
-    price: '$1,300 USD',
+    price: '$1,299 USD',
     priceNote: 'cupos limitados por agenda',
     features: [
       'Todo lo incluido en Bronce y Oro.',
@@ -146,7 +146,7 @@ function App() {
 
   return (
     <main>
-      {/* Reglas de CSS inyectadas para solucionar el video y el desbordamiento móvil */}
+      {/* Correcciones críticas inyectadas directamente */}
       <style>{`
         /* 1. Corrección de desbordamiento en móviles */
         @media (max-width: 768px) {
@@ -181,59 +181,60 @@ function App() {
           }
         }
 
-        /* 2. Corrección del reproductor de video YouTube y capas Z-Index */
-        .video-thumb.video-playing {
+        /* 2. Solución definitiva al reproductor de video de YouTube */
+        .video-container-active {
           position: relative !important;
           width: 100% !important;
-          max-width: 100% !important;
           background: #000 !important;
           border-radius: 16px !important;
           overflow: hidden !important;
-          z-index: 20 !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: none !important;
+          z-index: 50 !important;
           pointer-events: auto !important;
         }
-        .video-thumb.video-playing::before,
-        .video-thumb.video-playing::after {
-          display: none !important; /* Desactiva la capa/overlay de la miniatura */
-        }
-        .video-frame {
+
+        .video-aspect-ratio {
           position: relative !important;
           width: 100% !important;
-          aspect-ratio: 16 / 9 !important;
-          height: auto !important;
-          z-index: 10 !important;
+          padding-top: 56.25% !important; /* Relación de aspecto 16:9 perfecta */
+          height: 0 !important;
         }
-        .video-frame iframe {
+
+        .video-aspect-ratio iframe {
           position: absolute !important;
           top: 0 !important;
           left: 0 !important;
           width: 100% !important;
           height: 100% !important;
           border: 0 !important;
-          z-index: 15 !important;
+          z-index: 10 !important;
           pointer-events: auto !important;
         }
-        .video-inline-close {
+
+        .video-close-btn {
           position: absolute !important;
           top: 12px !important;
           right: 12px !important;
-          z-index: 30 !important;
-          background: rgba(0, 0, 0, 0.75) !important;
-          color: #fff !important;
-          border: 1px solid rgba(255, 255, 255, 0.2) !important;
+          z-index: 100 !important;
+          background: rgba(0, 0, 0, 0.8) !important;
+          color: #ffffff !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
           border-radius: 50% !important;
-          width: 38px !important;
-          height: 38px !important;
+          width: 40px !important;
+          height: 40px !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
           cursor: pointer !important;
           pointer-events: auto !important;
-          transition: transform 0.2s ease, background 0.2s ease;
+          transition: background 0.2s ease, transform 0.2s ease;
         }
-        .video-inline-close:hover {
-          background: rgba(0, 0, 0, 0.95) !important;
-          transform: scale(1.05);
+
+        .video-close-btn:hover {
+          background: #000000 !important;
+          transform: scale(1.1);
         }
       `}</style>
 
@@ -521,28 +522,26 @@ function App() {
               Reproducir video <ArrowRight size={18} />
             </button>
           </div>
+
+          {/* Reproductor de Video corregido sin interferencias CSS */}
           {videoOpen ? (
-            <div
-              className="video-thumb video-playing reveal reveal-delay"
-              role="region"
-              aria-label="Video: Por qué creé Chispa Digital y cómo puedo ayudarte a transformar tu agencia"
-            >
-              <div className="video-frame">
-                <iframe
-                  title="Por qué creé Chispa Digital y cómo puedo ayudarte a transformar tu agencia"
-                  src="https://www.youtube.com/embed/cRtLxh1Gfc4?autoplay=1"
-                  allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+            <div className="video-container-active">
               <button
-                className="video-inline-close"
+                className="video-close-btn"
                 onClick={() => setVideoOpen(false)}
                 aria-label="Cerrar video"
                 data-testid="button-close-video"
               >
-                <X size={21} />
+                <X size={22} />
               </button>
+              <div className="video-aspect-ratio">
+                <iframe
+                  title="Por qué creé Chispa Digital y cómo puedo ayudarte a transformar tu agencia"
+                  src="https://www.youtube.com/embed/cRtLxh1Gfc4?autoplay=1&rel=0"
+                  allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
             </div>
           ) : (
             <button
