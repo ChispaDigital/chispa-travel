@@ -146,6 +146,97 @@ function App() {
 
   return (
     <main>
+      {/* Reglas de CSS inyectadas para solucionar el video y el desbordamiento móvil */}
+      <style>{`
+        /* 1. Corrección de desbordamiento en móviles */
+        @media (max-width: 768px) {
+          .method-section {
+            height: auto !important;
+            min-height: auto !important;
+            max-height: none !important;
+            padding-bottom: 4rem !important;
+            overflow: visible !important;
+          }
+          .method-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important;
+            gap: 2rem !important;
+          }
+          .method-sticky {
+            position: relative !important;
+            top: auto !important;
+            height: auto !important;
+          }
+          .steps-list {
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important;
+            gap: 1rem !important;
+          }
+          .method-step {
+            height: auto !important;
+            min-height: auto !important;
+            position: relative !important;
+          }
+        }
+
+        /* 2. Corrección del reproductor de video YouTube y capas Z-Index */
+        .video-thumb.video-playing {
+          position: relative !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          background: #000 !important;
+          border-radius: 16px !important;
+          overflow: hidden !important;
+          z-index: 20 !important;
+          pointer-events: auto !important;
+        }
+        .video-thumb.video-playing::before,
+        .video-thumb.video-playing::after {
+          display: none !important; /* Desactiva la capa/overlay de la miniatura */
+        }
+        .video-frame {
+          position: relative !important;
+          width: 100% !important;
+          aspect-ratio: 16 / 9 !important;
+          height: auto !important;
+          z-index: 10 !important;
+        }
+        .video-frame iframe {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          border: 0 !important;
+          z-index: 15 !important;
+          pointer-events: auto !important;
+        }
+        .video-inline-close {
+          position: absolute !important;
+          top: 12px !important;
+          right: 12px !important;
+          z-index: 30 !important;
+          background: rgba(0, 0, 0, 0.75) !important;
+          color: #fff !important;
+          border: 1px solid rgba(255, 255, 255, 0.2) !important;
+          border-radius: 50% !important;
+          width: 38px !important;
+          height: 38px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          pointer-events: auto !important;
+          transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .video-inline-close:hover {
+          background: rgba(0, 0, 0, 0.95) !important;
+          transform: scale(1.05);
+        }
+      `}</style>
+
       <header className="site-header">
         <div className="nav-shell">
           <Logo />
@@ -553,7 +644,7 @@ function App() {
               podés encontrar en cualquier buscador. Es posicionarte como un
               experto indispensable en viajes. En Chispa Digital combinamos
               estrategia B2B, metodologías probadas de cobro de fees y
-                herramientas claras para transformarte de 'cotizador masivo' en
+              herramientas claras para transformarte de 'cotizador masivo' en
               una agencia de viajes rentable y respetada."
             </p>
             <p>
