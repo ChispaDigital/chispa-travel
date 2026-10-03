@@ -1,4 +1,4 @@
-code = '''import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   ArrowDownRight,
   ArrowRight,
@@ -145,9 +145,8 @@ function App() {
 
   return (
     <main>
-      {/* Correcciones críticas inyectadas directamente */}
       <style>{`
-        /* 1. Corrección de desbordamiento en móviles */
+        /* Corrección de desbordamiento en móviles */
         @media (max-width: 768px) {
           .method-section {
             height: auto !important;
@@ -180,7 +179,7 @@ function App() {
           }
         }
 
-        /* 2. Solución definitiva al reproductor de video de YouTube */
+        /* Reproductor de video */
         .video-container-active {
           position: relative !important;
           width: 100% !important;
@@ -197,7 +196,7 @@ function App() {
         .video-aspect-ratio {
           position: relative !important;
           width: 100% !important;
-          padding-top: 56.25% !important; /* Relación de aspecto 16:9 perfecta */
+          padding-top: 56.25% !important;
           height: 0 !important;
         }
 
@@ -479,7 +478,6 @@ function App() {
             </h2>
           </div>
 
-          {/* Reproductor de Video corregido sin interferencias CSS */}
           {videoOpen ? (
             <div className="video-container-active">
               <button
@@ -863,5 +861,3 @@ function App() {
 }
 
 export default App;
-'''
-print("Code length:", len(code))
