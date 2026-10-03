@@ -514,13 +514,6 @@ function App() {
               Por qué creé Chispa Digital y cómo puedo ayudarte a transformar
               tu agencia
             </h2>
-            <button
-              className="text-button"
-              onClick={() => setVideoOpen(true)}
-              data-testid="button-watch-video"
-            >
-              Reproducir video <ArrowRight size={18} />
-            </button>
           </div>
 
           {/* Reproductor de Video corregido sin interferencias CSS */}
