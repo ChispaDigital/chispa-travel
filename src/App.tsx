@@ -883,7 +883,7 @@ function App() {
                 href="https://legal.chispadigital.com/#privacidad"
                 target="_blank"
                 rel="noreferrer"
-                data-testid="link-privacidad"
+                data-testid="link-privacidad."
               >
                 Privacidad
               </a>
