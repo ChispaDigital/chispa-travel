@@ -8,7 +8,7 @@ import {
   Clock3,
   Globe2,
   Instagram,
-  Linkedin,
+  TikTok,
   MessageCircle,
   Menu,
   Play,
@@ -825,7 +825,7 @@ function App() {
               <a href="tel:+5491124543980">+54 9 11 2454-3980</a>
               <span>Argentina · EE.UU.</span>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/chispadigital.ar/"
                 target="_blank"
                 rel="noreferrer"
                 data-testid="link-instagram"
@@ -833,12 +833,12 @@ function App() {
                 <Instagram size={16} /> Instagram
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.tiktok.com/@chispadigital.ar"
                 target="_blank"
                 rel="noreferrer"
-                data-testid="link-linkedin"
+                data-testid="link-tiktok"
               >
-                <Linkedin size={16} /> LinkedIn
+                <TikTok size={16} /> TikTok
               </a>
             </div>
           </div>
