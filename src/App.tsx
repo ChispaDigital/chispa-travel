@@ -880,7 +880,7 @@ function App() {
                 Términos
               </a>
               <a
-                href="https://legal.chispadigital.com/"
+                href="https://legal.chispadigital.com/#privacidad"
                 target="_blank"
                 rel="noreferrer"
                 data-testid="link-privacidad"
