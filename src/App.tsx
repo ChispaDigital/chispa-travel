@@ -870,6 +870,25 @@ function App() {
               <a href="#servicios">Empresa en EE.UU. (LLC)</a>
             </div>
             <div>
+              <span>LEGAL</span>
+              <a
+                href="https://legal.chispadigital.com/"
+                target="_blank"
+                rel="noreferrer"
+                data-testid="link-terminos"
+              >
+                Términos
+              </a>
+              <a
+                href="https://legal.chispadigital.com/"
+                target="_blank"
+                rel="noreferrer"
+                data-testid="link-privacidad"
+              >
+                Privacidad
+              </a>
+            </div>
+            <div>
               <span>CONTACTO</span>
               <a href="mailto:contacto@chispadigital.com" data-testid="link-email">
                 contacto@chispadigital.com
