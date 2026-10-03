@@ -1,858 +1,228 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import {
-  ArrowDownRight,
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  ChevronDown,
-  Clock3,
-  Globe2,
-  Instagram,
-  MessageCircle,
-  Menu,
-  Play,
-  Sparkles,
-  X,
-  Zap,
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, ArrowRight, Instagram, MessageCircle, CheckCircle } from 'lucide-react';
 
-type PlanName = 'Bronce' | 'Oro' | 'Diamante' | '';
+// Tipado para los planes disponibles
+type PlanName = "" | "Bronce" | "Oro" | "Diamante";
 
-const methodSteps = [
-  'Diagnóstico estratégico de tu cuenta y nicho de viajes',
-  'Embudo de contenidos: atracción, autoridad y ventas',
-  'Guiones de prospección y cierre para cobrar fees',
-  'Módulos audiovisuales explicativos on-demand',
-  'Plantillas y material descargable de soporte',
-  'Sesiones individuales de devolución y acompañamiento',
-];
-
-const plans = [
-  {
-    name: 'Bronce' as const,
-    product: 'Chispa Academy',
-    subtitle: 'Para agentes que buscan bases sólidas y autonomía.',
-    price: '$299 USD',
-    priceNote: 'o su equivalente en ARS',
-    features: [
-      'Módulos on-demand para agentes de viajes.',
-      'Plantillas, guiones de WhatsApp y propuestas de itinerarios.',
-      'Tareas y recursos para optimizar Instagram y TikTok.',
-      'Soporte asincrónico en comunidad privada.',
-    ],
-    ideal: 'Agentes que empiezan y buscan ordenar su estrategia.',
-    button: 'Sumarme a Chispa Bronce',
-    className: 'plan-bronce',
-  },
-  {
-    name: 'Oro' as const,
-    product: 'Chispa Pro',
-    subtitle: 'Nuestra experiencia grupal insignia para acelerar resultados.',
-    price: '$599 USD',
-    priceNote: 'opción de pago en cuotas disponible',
-    features: [
-      'Todo lo incluido en Bronce.',
-      'Mentorías grupales semanales en vivo.',
-      'Auditoría de Reels, scripts y perfiles sociales.',
-      'Grupo de WhatsApp con acompañamiento.',
-      'Módulo: cobrar fees sin perder clientes.',
-    ],
-    ideal: 'Agentes que ya venden y necesitan cerrar mejor y cobrar fees.',
-    button: 'Postular a Chispa Oro',
-    className: 'plan-oro',
-    featured: true,
-  },
-  {
-    name: 'Diamante' as const,
-    product: 'VIP Mentorship',
-    subtitle: 'Acompañamiento 1 a 1 de alto impacto para agencias de alto rendimiento.',
-    price: '$1,299 USD',
-    priceNote: 'cupos limitados por agenda',
-    features: [
-      'Todo lo incluido en Bronce y Oro.',
-      'Sesiones 1:1 quincenales con los fundadores.',
-      'Diseño e implementación de tu embudo de ventas.',
-      'Soporte prioritario por WhatsApp 5 días.',
-      'Marca personal y pauta digital avanzada.',
-    ],
-    ideal: 'Agencias consolidadas que quieren posicionarse y escalar.',
-    button: 'Solicitar Entrevista VIP',
-    className: 'plan-diamante',
-  },
-];
-
-function Logo({ light = false }: { light?: boolean }) {
-  return (
-    <a
-      href="#inicio"
-      className={`brand-logo ${light ? 'brand-logo-light' : ''}`}
-      data-testid="link-logo"
-    >
-      <span className="brand-word">chispa</span>
-      <span className="brand-bolt" aria-hidden="true">
-        <Zap size={22} strokeWidth={3} fill="currentColor" />
-      </span>
-      <span className="brand-digital">DIGITAL</span>
-    </a>
-  );
-}
+// Componente Logo (puedes reemplazarlo por tu propio SVG o imagen de Chispa Digital)
+const Logo = ({ light = false }: { light?: boolean }) => (
+  <div className={`font-bold text-2xl ${light ? 'text-white' : 'text-gray-900'}`}>
+    CHISPA<span className="text-yellow-500">DIGITAL</span>
+  </div>
+);
 
 function App() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<PlanName>('');
   const [submitted, setSubmitted] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [selectedPlan, setSelectedPlan] = useState<PlanName>("");
 
-  useEffect(() => {
-    const revealNodes = Array.from(
-      document.querySelectorAll<HTMLElement>('.reveal'),
-    );
-    if (!revealNodes.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: '0px 0px -8% 0px' },
-    );
-
-    revealNodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollToForm = (plan: PlanName = '') => {
-    setSelectedPlan(plan);
-    setSubmitted(false);
-    document
-      .getElementById('diagnostico')
-      ?.scrollIntoView({ behavior: 'smooth' });
-    setMobileOpen(false);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Aquí iría la lógica para enviar los datos (ej: a tu webhook de Make.com o HubSpot)
     setSubmitted(true);
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
-
-  const closeMobile = () => setMobileOpen(false);
 
   return (
-    <main>
-      {/* Correcciones críticas inyectadas directamente */}
-      <style>{`
-        /* 1. Corrección de desbordamiento en móviles */
-        @media (max-width: 768px) {
-          .method-section {
-            height: auto !important;
-            min-height: auto !important;
-            max-height: none !important;
-            padding-bottom: 4rem !important;
-            overflow: visible !important;
-          }
-          .method-grid {
-            display: flex !important;
-            flex-direction: column !important;
-            height: auto !important;
-            gap: 2rem !important;
-          }
-          .method-sticky {
-            position: relative !important;
-            top: auto !important;
-            height: auto !important;
-          }
-          .steps-list {
-            display: flex !important;
-            flex-direction: column !important;
-            height: auto !important;
-            gap: 1rem !important;
-          }
-          .method-step {
-            height: auto !important;
-            min-height: auto !important;
-            position: relative !important;
-          }
-        }
-
-        /* 2. Solución definitiva al reproductor de video de YouTube */
-        .video-container-active {
-          position: relative !important;
-          width: 100% !important;
-          background: #000 !important;
-          border-radius: 16px !important;
-          overflow: hidden !important;
-          opacity: 1 !important;
-          visibility: visible !important;
-          transform: none !important;
-          z-index: 50 !important;
-          pointer-events: auto !important;
-        }
-
-        .video-aspect-ratio {
-          position: relative !important;
-          width: 100% !important;
-          padding-top: 56.25% !important; /* Relación de aspecto 16:9 perfecta */
-          height: 0 !important;
-        }
-
-        .video-aspect-ratio iframe {
-          position: absolute !important;
-          top: 0 !important;
-          left: 0 !important;
-          width: 100% !important;
-          height: 100% !important;
-          border: 0 !important;
-          z-index: 10 !important;
-          pointer-events: auto !important;
-        }
-
-        .video-close-btn {
-          position: absolute !important;
-          top: 12px !important;
-          right: 12px !important;
-          z-index: 100 !important;
-          background: rgba(0, 0, 0, 0.8) !important;
-          color: #ffffff !important;
-          border: 1px solid rgba(255, 255, 255, 0.3) !important;
-          border-radius: 50% !important;
-          width: 40px !important;
-          height: 40px !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          cursor: pointer !important;
-          pointer-events: auto !important;
-          transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        .video-close-btn:hover {
-          background: #000000 !important;
-          transform: scale(1.1);
-        }
-      `}</style>
-
-      <header className="site-header">
-        <div className="nav-shell">
-          <Logo />
-          <nav
-            className={`desktop-nav ${mobileOpen ? 'mobile-nav-open' : ''}`}
-            aria-label="Navegación principal"
-          >
-            <a href="#metodo" onClick={closeMobile} data-testid="link-metodo">
-              El método
-            </a>
-            <a href="#servicios" onClick={closeMobile} data-testid="link-servicios">
-              Servicios
-            </a>
-            <a href="#planes" onClick={closeMobile} data-testid="link-planes">
-              Planes
-            </a>
-            <a href="#filosofia" onClick={closeMobile} data-testid="link-filosofia">
-              Nuestra filosofía
-            </a>
-            <a
-              href="#diagnostico"
-              onClick={closeMobile}
-              className="nav-cta"
-              data-testid="link-diagnostico"
-            >
-              Agendar asesoría <ArrowUpRight size={15} />
-            </a>
-          </nav>
-          <button
-            className="menu-toggle"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
-            data-testid="button-mobile-menu"
-          >
-            {mobileOpen ? <X size={23} /> : <Menu size={23} />}
-          </button>
-        </div>
+    <main className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+      {/* Header / Navbar */}
+      <header className="flex justify-between items-center p-6 bg-white shadow-sm sticky top-0 z-50">
+        <Logo />
+        <nav className="hidden md:flex gap-6 font-medium">
+          <a href="#metodo" className="hover:text-yellow-500 transition-colors">El método</a>
+          <a href="#servicios" className="hover:text-yellow-500 transition-colors">Servicios y LLC</a>
+          <a href="#planes" className="hover:text-yellow-500 transition-colors">Planes y mentoría</a>
+        </nav>
+        <a href="#diagnostico" className="bg-yellow-500 text-gray-900 px-5 py-2 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
+          Agendar sesión
+        </a>
       </header>
 
-      <section className="hero" id="inicio">
-        <div className="hero-spark hero-spark-one">✦</div>
-        <div className="hero-spark hero-spark-two">✧</div>
-        <div className="hero-shell">
-          <div className="hero-copy reveal">
-            <div className="location-badge">
-              <span className="badge-dot" />
-              Argentina · EE.UU. | Especialistas en Marketing B2B para Agentes de
-              Viajes
-            </div>
-            <h1>
-              Escalá tu Agencia de Viajes y Cobrá Fees con el{' '}
-              <em>Método Chispa Digital</em>
-            </h1>
-            <p className="hero-lead">
-              Ayudamos a agentes de viajes independientes y asesores a dejar de
-              ser "cotizadores de presupuestos gratis" para convertirse en
-              agencias rentables, con un sistema predecible de captación en
-              redes sociales y facturación en dólares.
-            </p>
-            <div className="hero-actions">
-              <button
-                className="button button-yellow"
-                onClick={() =>
-                  document
-                    .getElementById('planes')
-                    ?.scrollIntoView({ behavior: 'smooth' })
-                }
-                data-testid="button-see-plans"
+      {/* Hero Section */}
+      <section className="py-20 px-6 text-center max-w-4xl mx-auto">
+        <h1 className="text-5xl font-extrabold tracking-tight mb-6">
+          Escala tu Agencia de Viajes
+        </h1>
+        <p className="text-xl text-gray-600 mb-10">
+          Transformando agentes de viajes en agencias rentables a nivel global. De Argentina al mundo. 
+          Te ayudamos a estructurar tu negocio, abrir tu LLC y multiplicar tus ventas.
+        </p>
+        <a href="#diagnostico" className="inline-flex items-center gap-2 bg-yellow-500 text-gray-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl">
+          Quiero transformar mi agencia <ArrowRight size={20} />
+        </a>
+      </section>
+
+      {/* Planes Section */}
+      <section id="planes" className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl font-bold text-center mb-12">Planes diseñados para tu crecimiento</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Bronce */}
+            <div className="border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-2xl font-bold mb-2">Chispa Academy</h3>
+              <p className="text-yellow-600 font-semibold mb-6">Plan Bronce</p>
+              <ul className="space-y-3 mb-8 text-gray-600">
+                <li>✓ Acceso a la academia base</li>
+                <li>✓ Comunidad de agentes</li>
+                <li>✓ Soporte por ticket</li>
+              </ul>
+              <button 
+                onClick={() => { setSelectedPlan("Bronce"); window.location.href = "#diagnostico"; }}
+                className="w-full py-3 border-2 border-yellow-500 text-yellow-600 font-bold rounded-lg hover:bg-yellow-50 transition-colors"
               >
-                Elegí tu Plan del Método <ArrowRight size={18} />
-              </button>
-              <button
-                className="text-button"
-                onClick={() => scrollToForm()}
-                data-testid="button-free-consultation"
-              >
-                Agendá tu reunión informativa gratis{' '}
-                <span className="text-button-arrow">↗</span>
+                Elegir Bronce
               </button>
             </div>
-          </div>
-          <div className="hero-art reveal reveal-delay">
-            <div className="art-orbit orbit-one" />
-            <div className="art-orbit orbit-two" />
-            <div className="art-dots" />
-            <div className="hero-card-main">
-              <div className="card-topline">
-                <span>MÉTODO</span>
-                <span>CHISPA DIGITAL</span>
-              </div>
-              <div className="card-bolt">
-                <Zap size={69} fill="currentColor" strokeWidth={1.5} />
-              </div>
-              <div className="card-label">
-                Escalá tu agencia
-                <br />
-                <strong>y cobrá fees.</strong>
-              </div>
-              <div className="card-line" />
-              <div className="card-bottom">
-                <span>
-                  CHISPA
-                  <br />
-                  <small>DIGITAL</small>
-                </span>
-                <ArrowUpRight size={20} />
-              </div>
-            </div>
-            <div className="floating-note note-one">
-              <span className="note-icon">
-                <Sparkles size={16} />
-              </span>
-              <span>
-                <strong>Cobrá fees</strong>
-                <small>facturación en dólares</small>
-              </span>
-            </div>
-            <div className="floating-note note-two">
-              <span className="note-icon note-purple">
-                <Globe2 size={16} />
-              </span>
-              <span>
-                <strong>Marketing B2B</strong>
-                <small>agentes de viajes</small>
-              </span>
-            </div>
-            <div className="art-caption">
-              Ideas que
-              <br />
-              <span>encienden</span> marcas
-            </div>
-          </div>
-        </div>
-        <div className="hero-scroll">
-          <span>El Método Chispa Digital</span>
-          <ArrowDownRight size={18} />
-        </div>
-      </section>
 
-      <section className="marquee-band" aria-label="Impacto Chispa Digital">
-        <div className="marquee-track">
-          <span>EDUCACIÓN</span>
-          <i>✦</i>
-          <span>CONFIANZA</span>
-          <i>✦</i>
-          <span>INTERNACIONALIZACIÓN</span>
-          <i>✦</i>
-          <span>EDUCACIÓN</span>
-          <i>✦</i>
-          <span>CONFIANZA</span>
-          <i>✦</i>
-        </div>
-      </section>
-
-      <section className="benefits-section section-pad" id="impacto">
-        <div className="section-shell">
-          <div className="section-intro reveal">
-            <h2>
-              Del posteo sin estrategia a un sistema de captación{' '}
-              <span>predecible.</span>
-            </h2>
-          </div>
-          <div className="benefit-grid">
-            <article className="benefit-card benefit-lilac reveal">
-              <span className="benefit-number">01</span>
-              <Sparkles size={28} className="benefit-icon" />
-              <h3>Educación</h3>
-              <p>Del posteo sin estrategia a un sistema de captación predecible.</p>
-              <ArrowUpRight className="card-arrow" size={22} />
-            </article>
-            <article className="benefit-card benefit-yellow reveal reveal-delay">
-              <span className="benefit-number">02</span>
-              <div className="confidence-mark">✓</div>
-              <h3>Confianza</h3>
-              <p>
-                Metodología comprobada para cobrar fees y filtrar clientes
-                curiosos.
-              </p>
-              <ArrowUpRight className="card-arrow" size={22} />
-            </article>
-            <article className="benefit-card benefit-violet reveal reveal-delay-two">
-              <span className="benefit-number">03</span>
-              <Globe2 size={30} className="benefit-icon" />
-              <h3>Internacionalización</h3>
-              <p>
-                Facturá en dólares y trabajá desde cualquier lugar.
-              </p>
-              <ArrowUpRight className="card-arrow" size={22} />
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="method-section section-pad" id="metodo">
-        <div className="method-grid section-shell">
-          <div className="method-sticky reveal">
-            <h2>
-              Asesoría Integral
-              <br />
-              <span>para Agentes de Viajes</span>
-            </h2>
-            <p>
-              Te acompañamos paso a paso a transformar tu negocio: dejá de
-              cotizar presupuestos gratis y construí un sistema predecible de
-              captación de clientes calificados y cobro de fees de asesoría.
-            </p>
-          </div>
-          <div className="steps-list">
-            {methodSteps.map((step, index) => (
-              <article
-                className={`method-step reveal reveal-delay-${Math.min(
-                  index + 1,
-                  2,
-                )}`}
-                key={step}
+            {/* Oro */}
+            <div className="border-2 border-yellow-500 rounded-2xl p-8 shadow-lg relative transform md:-translate-y-4 bg-white">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-gray-900 px-4 py-1 rounded-full font-bold text-sm">
+                MÁS ELEGIDO
+              </div>
+              <h3 className="text-2xl font-bold mb-2">Chispa Pro</h3>
+              <p className="text-yellow-600 font-semibold mb-6">Plan Oro</p>
+              <ul className="space-y-3 mb-8 text-gray-600">
+                <li>✓ Todo lo de Bronce</li>
+                <li>✓ Formación de LLC en USA</li>
+                <li>✓ Sesiones grupales quincenales</li>
+              </ul>
+              <button 
+                onClick={() => { setSelectedPlan("Oro"); window.location.href = "#diagnostico"; }}
+                className="w-full py-3 bg-yellow-500 text-gray-900 font-bold rounded-lg hover:bg-yellow-400 transition-colors shadow-md"
               >
-                <span className="step-number">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <div>
-                  <h3>{step}</h3>
-                </div>
-                <ArrowDownRight size={21} />
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="services-section section-pad" id="servicios">
-        <div className="section-shell">
-          <div className="services-heading reveal">
-            <h2>
-              Estructurá tu negocio de viajes
-              <br />
-              <span>para cobrar en dólares</span>
-            </h2>
-            <p>
-              Estructurá tu negocio de viajes para cobrar en dólares y proteger
-              tu activo.
-            </p>
-          </div>
-          <div className="services-grid">
-            <article className="service-card reveal">
-              <div className="service-icon">
-                <Globe2 size={30} />
-              </div>
-              <h3>Empresa en EE.UU.</h3>
-              <p>
-                Abrimos tu LLC en Estados Unidos para que puedas cobrar en
-                dólares sin fricciones y operar tu agencia desde Argentina o
-                cualquier parte del mundo.
-              </p>
-              <p className="service-includes">
-                <strong>Incluye:</strong> Registro LLC + EIN + Operating
-                Agreement + Apertura de cuenta bancaria en USA.
-              </p>
-              <a
-                href="#diagnostico"
-                onClick={() => scrollToForm()}
-                data-testid="link-llc-service"
-              >
-                Abrir mi empresa <ArrowUpRight size={17} />
-              </a>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="video-section section-pad">
-        <div className="section-shell video-layout">
-          <div className="video-copy reveal">
-            <h2>
-              Por qué creé Chispa Digital y cómo puedo ayudarte a transformar
-              tu agencia
-            </h2>
-          </div>
-
-          {/* Reproductor de Video corregido sin interferencias CSS */}
-          {videoOpen ? (
-            <div className="video-container-active">
-              <button
-                className="video-close-btn"
-                onClick={() => setVideoOpen(false)}
-                aria-label="Cerrar video"
-                data-testid="button-close-video"
-              >
-                <X size={22} />
+                Elegir Oro
               </button>
-              <div className="video-aspect-ratio">
-                <iframe
-                  title="Por qué creé Chispa Digital y cómo puedo ayudarte a transformar tu agencia"
-                  src="https://www.youtube.com/embed/cRtLxh1Gfc4?autoplay=1&rel=0"
-                  allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
             </div>
-          ) : (
-            <button
-              className="video-thumb reveal reveal-delay"
-              onClick={() => setVideoOpen(true)}
-              aria-label="Reproducir video: Por qué creé Chispa Digital y cómo puedo ayudarte a transformar tu agencia"
-              data-testid="button-video-thumbnail"
-            >
-              <div className="video-grid" />
-              <div className="video-word">
-                Por qué creé
-                <br />
-                <span>Chispa Digital</span>
-              </div>
-              <div className="play-button">
-                <Play size={24} fill="currentColor" />
-              </div>
-              <div className="video-duration">
-                <Clock3 size={13} /> YouTube
-              </div>
-            </button>
-          )}
-        </div>
-      </section>
 
-      <section className="plans-section section-pad" id="planes">
-        <div className="section-shell">
-          <div className="plans-heading reveal">
-            <div>
-              <h2>
-                Elegí el nivel de acompañamiento
-                <br />
-                <span>que tu agencia necesita para escalar.</span>
-              </h2>
-            </div>
-          </div>
-          <div className="plans-grid">
-            {plans.map((plan) => (
-              <article
-                className={`plan-card ${plan.className} ${
-                  plan.featured ? 'plan-featured' : ''
-                } reveal`}
-                key={plan.name}
+            {/* Diamante */}
+            <div className="border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow bg-gray-900 text-white">
+              <h3 className="text-2xl font-bold mb-2">VIP Mentorship</h3>
+              <p className="text-yellow-400 font-semibold mb-6">Plan Diamante</p>
+              <ul className="space-y-3 mb-8 text-gray-300">
+                <li>✓ Todo lo de Oro</li>
+                <li>✓ 1-a-1 Estratégico</li>
+                <li>✓ Optimización fiscal avanzada</li>
+              </ul>
+              <button 
+                onClick={() => { setSelectedPlan("Diamante"); window.location.href = "#diagnostico"; }}
+                className="w-full py-3 border-2 border-yellow-500 text-yellow-400 font-bold rounded-lg hover:bg-gray-800 transition-colors"
               >
-                <div className="plan-top">
-                  <span className="plan-name">
-                    Método Chispa Digital — {plan.name}
-                  </span>
-                  <span className="plan-mark">{plan.featured ? '✦' : '+'}</span>
-                </div>
-                <p className="plan-kicker">{plan.product}</p>
-                <p className="plan-description">{plan.subtitle}</p>
-                <div className="plan-price">
-                  <strong>{plan.price}</strong>
-                  <span>{plan.priceNote}</span>
-                </div>
-                <p className="plan-include-label">Qué incluye:</p>
-                <ul>
-                  {plan.features.map((feature) => (
-                    <li key={feature}>
-                      <Check size={16} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <p className="plan-ideal">
-                  <strong>Ideal para:</strong> {plan.ideal}
-                </p>
-                <button
-                  className={`plan-button ${plan.featured ? 'button-yellow' : ''}`}
-                  onClick={() => scrollToForm(plan.name)}
-                  data-testid={`button-plan-${plan.name.toLowerCase()}`}
-                >
-                  {plan.button} <ArrowRight size={17} />
-                </button>
-              </article>
-            ))}
+                Elegir Diamante
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="philosophy-section section-pad" id="filosofia">
-        <div className="section-shell philosophy-layout">
-          <div className="philosophy-director reveal">
-            <div className="director-halo" aria-hidden="true" />
-            <img
-              src="/directora.png"
-              alt="Directora de Chispa Digital sosteniendo un teléfono"
-            />
-          </div>
-          <div className="philosophy-copy reveal reveal-delay">
-            <h2>
-              Del Posteo Aislado
-              <br />
-              <span>al Sistema de Captación.</span>
-            </h2>
-            <p>
-              "Trabajar en redes no es subir fotos bonitas de destinos que
-              podés encontrar en cualquier buscador. Es posicionarte como un
-              experto indispensable en viajes. En Chispa Digital combinamos
-              estrategia B2B, metodologías probadas de cobro de fees y
-              herramientas claras para transformarte de 'cotizador masivo' en
-              una agencia de viajes rentable y respetada."
-            </p>
-            <p>
-              <strong>Investigación:</strong> Detectamos los puntos ciegos de tu
-              comunicación actual.
-            </p>
-            <p>
-              <strong>Educación:</strong> Te formamos para que dejes de
-              depender de la suerte o del boca en boca.
-            </p>
-            <p>
-              <strong>Acción:</strong> Implementamos embudos de atracción que
-              traen clientes dispuestos a pagar por tu asesoría.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="testimonials-section section-pad">
-        <div className="section-shell">
-          <div className="testimonials-heading reveal">
-            <h2>
-              Testimonios y casos
-              <br />
-              <span>de éxito.</span>
-            </h2>
-          </div>
-          <div className="testimonials-grid">
-            <blockquote className="testimonial testimonial-yellow reveal">
-              <span className="quote-mark">“</span>
-              <p>
-                Pasé de armar itinerarios gratis de 10 días a cobrar $100 USD
-                de fee antes de abrir la laptop.
-              </p>
-              <footer>
-                <span className="avatar avatar-purple">L</span>
-                <span>
-                  <strong>Laura</strong>
-                  <small>Agente de Viajes</small>
-                </span>
-              </footer>
-            </blockquote>
-            <blockquote className="testimonial testimonial-lilac reveal reveal-delay">
-              <span className="quote-mark">“</span>
-              <p>
-                El embudo que armamos en la versión Oro me permitió cerrar 4
-                viajes de grupo en un solo mes usando TikTok.
-              </p>
-              <footer>
-                <span className="avatar avatar-yellow">C</span>
-                <span>
-                  <strong>Carlos</strong>
-                  <small>Asesor de Viajes de Lujo</small>
-                </span>
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-      </section>
-
-      <section className="diagnostic-section section-pad" id="diagnostico">
-        <div className="section-shell diagnostic-layout">
-          <div className="diagnostic-copy reveal">
-            <h2>
-              Encendamos el crecimiento de tu
-              <br />
-              <span>Agencia de Viajes</span>
-            </h2>
-            <p>
-              Reservá tu sesión de diagnóstico gratuita de 15 minutos.
-              Analizamos tu estado actual y te recomendamos el nivel del Método
-              Chispa Digital adecuado para vos.
-            </p>
-          </div>
-          <form
-            className="diagnostic-form reveal reveal-delay"
-            ref={formRef}
-            onSubmit={handleSubmit}
-          >
+      {/* Formulario Section */}
+      <section id="diagnostico" className="py-20 px-6 bg-gray-50">
+        <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <h2 className="text-3xl font-bold text-center mb-8">Postula a tu sesión de diagnóstico</h2>
+          
+          <form onSubmit={handleSubmit}>
             {submitted ? (
-              <div className="success-state">
-                <div className="success-icon">
-                  <Check size={30} />
-                </div>
-                <h3>Consulta enviada.</h3>
-                <p>Gracias por reservar tu diagnóstico gratuito de 15 minutos.</p>
+              <div className="text-center py-10 animate-fade-in">
+                <CheckCircle size={64} className="mx-auto text-green-500 mb-6" />
+                <h3 className="text-2xl font-bold mb-2">¡Solicitud enviada con éxito!</h3>
+                <p className="text-gray-600 mb-8">Nos pondremos en contacto contigo a la brevedad para coordinar tu sesión.</p>
                 <button
                   type="button"
-                  className="button button-yellow"
+                  className="bg-gray-100 text-gray-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors"
                   onClick={() => setSubmitted(false)}
-                  data-testid="button-send-another"
                 >
                   Enviar otra consulta
                 </button>
               </div>
             ) : (
-              <>
-                <div className="form-heading">
-                  <span>CONTACTO</span>
-                  <h3>Reservá tu diagnóstico</h3>
+              <div className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>
+                  <input
+                    type="text"
+                    id="name"
+                    required
+                    placeholder="Tu nombre"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+                  />
                 </div>
-                <label>
-                  Nombre completo
-                  <input required name="name" type="text" />
-                </label>
-                <label>
-                  Teléfono / WhatsApp (con código de país)
-                  <input required name="phone" type="tel" />
-                </label>
-                <label>
-                  Email
-                  <input required name="email" type="email" />
-                </label>
-                <label>
-                  ¿Cuál es tu situación actual como Agente de Viajes?
-                  <div className="select-wrap">
-                    <select required name="stage" defaultValue="">
-                      <option value="" disabled>
-                        Elegí una opción
-                      </option>
-                      <option>
-                        Recién empiezo y no sé cómo captar clientes.
-                      </option>
-                      <option>
-                        Tengo clientes pero cotizo gratis y paso muchas horas sin
-                        cerrar.
-                      </option>
-                      <option>
-                        Ya vendo bien y quiero escalar mi agencia con el programa
-                        VIP y cobrar en dólares.
-                      </option>
-                    </select>
-                    <ChevronDown size={17} />
-                  </div>
-                </label>
-                <label>
-                  Contanos sobre tu proyecto o agencia actual
-                  <textarea required name="project" rows={4} />
-                </label>
-                {selectedPlan && (
-                  <div className="selected-plan">
-                    <span>Plan de interés</span>
-                    <strong>{selectedPlan}</strong>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPlan('')}
-                      aria-label="Quitar plan seleccionado"
-                      data-testid="button-remove-plan"
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email corporativo</label>
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    placeholder="tu@agencia.com"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="plan" className="block text-sm font-medium text-gray-700 mb-2">Plan de interés</label>
+                  <div className="relative">
+                    <select
+                      id="plan"
+                      value={selectedPlan}
+                      onChange={(e) => setSelectedPlan(e.target.value as PlanName)}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none appearance-none transition-all bg-white"
                     >
-                      <X size={15} />
-                    </button>
+                      <option value="">No estoy seguro, busco orientación</option>
+                      <option value="Bronce">Chispa Academy (Bronce)</option>
+                      <option value="Oro">Chispa Pro (Oro)</option>
+                      <option value="Diamante">VIP Mentorship (Diamante)</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-3.5 text-gray-400 pointer-events-none" size={20} />
                   </div>
-                )}
-                <button
-                  className="button button-violet form-submit"
-                  type="submit"
-                  data-testid="button-submit-diagnostic"
-                >
-                  Enviar Consulta / Reservar Diagnóstico <ArrowUpRight size={18} />
+                </div>
+
+                <button type="submit" className="w-full bg-yellow-500 text-gray-900 font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 transition-colors shadow-md mt-4">
+                  Agendar mi sesión <ArrowRight size={20} />
                 </button>
-              </>
+                <p className="text-xs text-center text-gray-500 mt-4">
+                  Tus datos están seguros. Al enviar este formulario aceptas nuestra política de privacidad.
+                </p>
+              </div>
             )}
           </form>
         </div>
       </section>
 
-      <footer className="site-footer">
-        <div className="section-shell footer-main">
-          <div>
+      {/* Footer corporativo */}
+      <footer className="bg-gray-900 text-gray-300 py-12 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 border-b border-gray-800 pb-8 mb-8">
+          <div className="col-span-1">
             <Logo light />
-            <p>Ideas que encienden marcas.</p>
+            <p className="mt-4 text-sm leading-relaxed">
+              Transformando agentes de viajes en agencias rentables a nivel global.
+              De Argentina al mundo.
+            </p>
           </div>
-          <div className="footer-links">
-            <div>
-              <span>SERVICIOS PRINCIPALES</span>
-              <a href="#planes">Método Chispa Bronce</a>
-              <a href="#planes">Método Chispa Oro</a>
-              <a href="#planes">Método Chispa Diamante</a>
-              <a href="#servicios">Empresa en EE.UU. (LLC)</a>
+          
+          <div>
+            <h4 className="text-white font-bold mb-4">Navegación</h4>
+            <div className="flex flex-col space-y-2 text-sm">
+              <a href="#metodo" className="hover:text-yellow-400 transition-colors">El método</a>
+              <a href="#servicios" className="hover:text-yellow-400 transition-colors">Servicios y LLC</a>
+              <a href="#planes" className="hover:text-yellow-400 transition-colors">Planes y mentoría</a>
+              <a href="#filosofia" className="hover:text-yellow-400 transition-colors">Filosofía</a>
             </div>
-            <div>
-              <span>CONTACTO</span>
-              <a href="mailto:contacto@chispadigital.com" data-testid="link-email">
-                contacto@chispadigital.com
+          </div>
+          
+          <div>
+            <h4 className="text-white font-bold mb-4">Contacto</h4>
+            <div className="flex flex-col space-y-3 text-sm">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
+                <Instagram size={18} /> Instagram
               </a>
-              <a href="tel:+5491124543980">+54 9 11 2454-3980</a>
-              <span>Argentina · EE.UU.</span>
-              <a
-                href="https://www.instagram.com/chispadigital.ar/"
-                target="_blank"
-                rel="noreferrer"
-                data-testid="link-instagram"
-              >
-                <Instagram size={16} /> Instagram
+              <a href="#diagnostico" className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
+                <MessageCircle size={18} /> Soporte
               </a>
             </div>
           </div>
         </div>
-        <div className="section-shell footer-bottom">
-          <span>© 2026 Chispa Digital. Todos los derechos reservados.</span>
-          <a href="#inicio" data-testid="link-back-top">
-            Volver arriba ↑
-          </a>
+        
+        <div className="text-center text-sm text-gray-500">
+          <p>© {new Date().getFullYear()} Chispa Digital. Todos los derechos reservados.</p>
         </div>
       </footer>
-
-      <a
-        className="whatsapp-float"
-        href="https://wa.me/5491124543980"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Escribir por WhatsApp a Chispa Digital"
-        data-testid="link-whatsapp"
-      >
-        <MessageCircle size={22} strokeWidth={2.2} />
-        <span>Hablemos</span>
-      </a>
     </main>
   );
 }
