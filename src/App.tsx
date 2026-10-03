@@ -8,7 +8,6 @@ import {
   Clock3,
   Globe2,
   Instagram,
-  TikTok,
   MessageCircle,
   Menu,
   Play,
