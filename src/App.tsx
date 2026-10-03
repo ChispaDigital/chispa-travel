@@ -831,14 +831,6 @@ function App() {
               >
                 <Instagram size={16} /> Instagram
               </a>
-              <a
-                href="https://www.tiktok.com/@chispadigital.ar"
-                target="_blank"
-                rel="noreferrer"
-                data-testid="link-tiktok"
-              >
-                <TikTok size={16} /> TikTok
-              </a>
             </div>
           </div>
         </div>
