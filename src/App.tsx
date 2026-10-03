@@ -101,6 +101,7 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanName>('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [videoOpen, setVideoOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -135,10 +136,34 @@ function App() {
     setMobileOpen(false);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setIsSubmitting(true);
+
+    const formData = new FormData(event.currentTarget);
+    if (selectedPlan) {
+      formData.append('plan_de_interes', selectedPlan);
+    }
+
+    try {
+      await fetch('https://formspree.io/f/xljdqvdw', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('Error enviando formulario:', error);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      window.open(
+        'https://calendly.com/contacto-chispadigital/reunion-de-descubrimiento-15-min-clone',
+        '_blank',
+      );
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   const closeMobile = () => setMobileOpen(false);
@@ -311,7 +336,7 @@ function App() {
               </button>
               <a
                 className="text-button"
-                href="https://calendly.com/contacto-chispadigital/reunion-de-descubrimiento-15-min-clone?month=2026-10"
+                href="https://calendly.com/contacto-chispadigital/reunion-de-descubrimiento-15-min-clone"
                 target="_blank"
                 rel="noreferrer"
                 data-testid="button-free-consultation"
@@ -723,8 +748,11 @@ function App() {
                 <div className="success-icon">
                   <Check size={30} />
                 </div>
-                <h3>Consulta enviada.</h3>
-                <p>Gracias por reservar tu diagnóstico gratuito de 15 minutos.</p>
+                <h3>¡Mensaje enviado!</h3>
+                <p>
+                  Recibimos tu consulta. Te respondemos en menos de 24 horas
+                  hábiles desde contacto@chispadigital.com.
+                </p>
                 <button
                   type="button"
                   className="button button-yellow"
@@ -742,15 +770,30 @@ function App() {
                 </div>
                 <label>
                   Nombre completo
-                  <input required name="name" type="text" />
+                  <input
+                    required
+                    name="name"
+                    type="text"
+                    placeholder="Como te llamás"
+                  />
                 </label>
                 <label>
                   Teléfono / WhatsApp (con código de país)
-                  <input required name="phone" type="tel" />
+                  <input
+                    required
+                    name="phone"
+                    type="tel"
+                    placeholder="+54 9 11 1234-5678"
+                  />
                 </label>
                 <label>
                   Email
-                  <input required name="email" type="email" />
+                  <input
+                    required
+                    name="email"
+                    type="email"
+                    placeholder="vos@correo.com"
+                  />
                 </label>
                 <label>
                   ¿Cuál es tu situación actual como Agente de Viajes?
@@ -776,7 +819,12 @@ function App() {
                 </label>
                 <label>
                   Contanos sobre tu proyecto o agencia actual
-                  <textarea required name="project" rows={4} />
+                  <textarea
+                    required
+                    name="project"
+                    rows={4}
+                    placeholder="¿En qué podemos ayudarte?"
+                  />
                 </label>
                 {selectedPlan && (
                   <div className="selected-plan">
@@ -795,9 +843,11 @@ function App() {
                 <button
                   className="button button-violet form-submit"
                   type="submit"
+                  disabled={isSubmitting}
                   data-testid="button-submit-diagnostic"
                 >
-                  Enviar Consulta / Reservar Diagnóstico <ArrowUpRight size={18} />
+                  {isSubmitting ? 'Enviando...' : 'Enviar Consulta / Reservar Diagnóstico'}{' '}
+                  <ArrowUpRight size={18} />
                 </button>
               </>
             )}
