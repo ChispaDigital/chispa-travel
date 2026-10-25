@@ -894,7 +894,6 @@ function App() {
                 contacto@chispadigital.com
               </a>
               <a href="tel:+5491124543980">+54 9 11 2454-3980</a>
-              <span>Argentina · EE.UU.</span>
               <a
                 href="https://www.instagram.com/chispadigital.ar/"
                 target="_blank"
